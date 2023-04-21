@@ -3,9 +3,9 @@
 This is a Web App that implements the following Cryptographic Algorithms
 
 ### Private Key Cryptography
-#### Primitive Ciphers
-###### Substitution Ciphers
-- Ceaser Cipher
+#### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Primitive Ciphers
+###### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Substitution Ciphers
+- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ceaser Cipher
 - Playfair Cipher
 - Hill Cipher
 - Vigenere Cipher
