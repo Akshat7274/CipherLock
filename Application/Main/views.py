@@ -1,7 +1,7 @@
 from django.http import QueryDict
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from Ciphers import Caesar
-from .forms import NameForm, CaesarForm
+from .forms import CaesarForm
 
 # Create your views here.
 
