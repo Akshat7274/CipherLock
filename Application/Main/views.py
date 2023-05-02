@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill
-from .forms import CaesarForm, PlayfairForm, HillForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm
 import math
 
 # Create your views here.
@@ -94,3 +94,25 @@ def hill(request):
     else:
         form = HillForm()
     return render(request,"hill.html",{"form":form})
+
+def vigenere(request):
+    if request.method == "POST":
+        form = VigenereForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                request.POST['pt'] = Vigenere.decrypt(request.POST['ct'],request.POST['key'])[-1][-1]
+                form = VigenereForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                request.POST['ct'] = Vigenere.encrypt(request.POST['pt'],request.POST['key'])[-1][-1]
+                form = VigenereForm(request.POST)
+            return render(request, "vigenere.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = VigenereForm()
+    return render(request,"vigenere.html",{"form":form})
