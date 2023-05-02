@@ -5,6 +5,53 @@ Cipher WebApp
 {% endblock title %}
 
 {% block body %}
-<h1>Cipher WebApp</h1>
-<h3>For Cryptographic Algorithms</h3>
+<h1 class="text-center">Cipher WebApp</h1>
+<h5 class="text-center">(For Cryptographic Algorithms)</h5>
+<div class="row" style="margin-top: 2%;">
+    <div class="col-md-6">
+        <h3 class="text-center" style="color: blue">Private Key Cryptography</h3>
+        <ul style="margin-top: 3%;">
+            <li><b>Classical Ciphers</b></li>
+            <ul>
+                <li><i>Substitution Ciphers</i></li>
+                <ul>
+                    <li>Caesar Cipher</li>
+                    <li>Playfair Cipher</li>
+                    <li>Hill Cipher</li>
+                    <li>Vigenere Cipher</li>
+                    <li>Vernam Cipher</li>
+                </ul>
+                <li><i>Transposition Ciphers</i></li>
+                <ul>
+                    <li>Railfence Cipher (Conventional Method)</li>
+                    <li>Railfence Cipher (New Method)</li>
+                    <li>Row Column Transformation Cipher</li>
+                </ul>
+            </ul>
+            <li><b>Modern Ciphers</b></li>
+            <ul>
+                <li>Data Encryption Standard (DES)</li>
+                <li>Advanced Encryption Standard (AES)</li>
+            </ul>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center" style="color: blue">Public Key Cryptography</h3>
+        <ul style="margin-top: 3%;">
+            <li><b>Encryption Algorithm</b></li>
+            <ul>
+                <li>RSA Algorithm</li>
+            </ul>
+            <li><b>Key Generation Algorithm</b></li>
+            <ul>
+                <li>Diffie Hellman Algorithm</li>
+            </ul>
+            <li><b>Digital Signature Algorithm</b></li>
+            <ul>
+                <li>El Gamal Algorithm</li>
+            </ul>
+        </ul>
+    </div>
+    <div class="col-md-12 text-center">This app contains these cryptographic algorithms. You can navigate through them from the Navigation Bar!</div>
+</div>
 {% endblock body %}
