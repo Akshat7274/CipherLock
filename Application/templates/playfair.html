@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Cipher WebApp | Caesar Cipher
+Cipher WebApp | Playfair Cipher
 {% endblock title %}
 
 {% block body %}
-    <h1 class="form-title">Caesar Cipher</h1>
+    <h1 class="form-title">Playfair Cipher</h1>
     <div class="form-container">
-        <form action="/caesar" method="post">
+        <form action="/playfair" method="post">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-1"></div>
