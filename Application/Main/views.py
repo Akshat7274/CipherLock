@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm
 import math
 
 # Create your views here.
@@ -188,3 +188,25 @@ def railfenceNew(request):
     else:
         form = RailfenceForm()
     return render(request,"railfence-new.html",{"form":form})
+
+def rcTransform(request):
+    if request.method == "POST":
+        form = RCTForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                request.POST['pt'] = RCTransform.decrypt(request.POST['ct'],request.POST['key'])
+                form = RCTForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                request.POST['ct'] = RCTransform.encrypt(request.POST['pt'],request.POST['key'])
+                form = RCTForm(request.POST)
+            return render(request, "rc-transform.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = RCTForm()
+    return render(request,"rc-transform.html",{"form":form})
