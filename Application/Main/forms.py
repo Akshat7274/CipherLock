@@ -162,3 +162,42 @@ class AESForm(forms.Form):
         'placeholder' : "Ciphertext",
         'autocomplete' : "off"
     }), required=False)
+
+class DFForm(forms.Form):
+    q = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "Prime Number",
+        'autocomplete' : "off",
+        'min' : 2,
+        'max' : 500,
+    }), required=True)
+    a = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "Primitive Root",
+        'autocomplete' : "off"
+    }), required=True)
+    xa = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "A's Private Key",
+        'autocomplete' : "off"
+    }), required=False)
+    xb = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "B's Private Key",
+        'autocomplete' : "off"
+    }), required=False)
+    ya = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "A's Public Key",
+        'autocomplete' : "off"
+    }), required=False)
+    yb = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "B's Public Key",
+        'autocomplete' : "off"
+    }), required=False)
+    key = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "Generated Key",
+        'autocomplete' : "off"
+    }), required=False)

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cipher WebApp | Diffie Hellman
+{% endblock title %}
+
+{% block body %}
+    <h1 class="form-title">Diffie Hellman Key Generation Algorithm</h1>
+    <div class="form-container">
+        <form action="/diffie-hellman" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="form-group col-md-4">
+                    {{ form.q }}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-4">
+                    {{ form.a }}
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <div class="form-group col-md-4">
+                    {{ form.xa }}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-4">
+                    {{ form.xb }}
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <div class="form-group col-md-4">
+                    {{ form.ya }}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-4">
+                    {{ form.yb }}
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-4"></div>
+                <div class="form-group col-md-4">
+                    {{ form.key }}
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="form-group col-md-12 text-center">
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </div>
+            <br>
+            <p class="error-text">{{ error }}</p>
+        </form>
+    </div>
+    <br><br>
+    <!-- <h1>{{ extra }}</h1> -->
+    <script>
+        var leftClass = 'toggle-left';
+        var rightClass = 'toggle-right';
+
+        function toggle() {
+            var arrow = document.querySelector('.fa-arrow-circle-right');
+            if (~arrow.className.indexOf(rightClass)) {
+                arrow.className = arrow.className.replace(rightClass, leftClass);
+            } else {
+                arrow.className = arrow.className.replace(leftClass, rightClass);
+            }
+        }
+    </script>
+{% endblock body %}

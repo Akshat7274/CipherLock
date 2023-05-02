@@ -1,6 +1,7 @@
+import random
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES, DiffieHellman
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm, DFForm
 import math
 
 # Create your views here.
@@ -320,3 +321,41 @@ def aes(request):
     else:
         form = AESForm()
     return render(request,"aes.html",{"form":form})
+
+def diffieHellman(request):
+    if request.method == "POST":
+        form = DFForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            isPrime = True
+            for i in range(2,int(request.POST['q'])):
+                if (int(request.POST['q'])%i==0):
+                    isPrime = False
+                    break
+            if (not isPrime):
+                error = "The entered number is not a Prime Number"
+            elif (int(request.POST.get("a")) not in DiffieHellman.primitiveRoot(int(request.POST['q']))):
+                error = request.POST['a'] + " is not a primitive root of " + request.POST['q'] + ". Please enter one of the following values: " + str(DiffieHellman.primitiveRoot(int(request.POST['q'])))
+            else:
+                extra = "Explanation of Encryption"
+                inp = int(request.POST['q'])
+                root = int(request.POST['a'])
+                request.POST['xa'] = random.randint(2,inp-1)
+                request.POST['xb'] = request.POST['xa']
+                while (request.POST['xb'] == request.POST['xa']):
+                    request.POST['xb'] = random.randint(2,inp-1)
+                request.POST['ya'] = (root ** request.POST['xa']) % inp
+                request.POST['yb'] = (root ** request.POST['xb']) % inp
+                ka = (request.POST['yb'] ** request.POST['xa']) % inp
+                kb = (request.POST['ya'] ** request.POST['xb']) % inp
+                if (ka == kb):
+                    request.POST['key'] = ka
+                else:
+                    request.POST['key'] = "Failed"
+                form = DFForm(request.POST)
+            return render(request, "diffie-hellman.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = DFForm()
+    return render(request,"diffie-hellman.html",{"form":form})
