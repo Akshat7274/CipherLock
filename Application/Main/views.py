@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm
 import math
 
 # Create your views here.
@@ -116,3 +116,31 @@ def vigenere(request):
     else:
         form = VigenereForm()
     return render(request,"vigenere.html",{"form":form})
+
+def vernam(request):
+    if request.method == "POST":
+        form = VernamForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                request.POST['pt'] = ""
+                for i in request.POST['ct'].split(" "):
+                    request.POST['pt'] += Vernam.txtcvt(Vernam.xoring(Vernam.binary(i),Vernam.binary(request.POST['key']))) + " "
+                request.POST['pt'] = request.POST['pt'][0:-1]
+                form = VernamForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                request.POST['ct'] = ""
+                for i in request.POST['pt'].split(" "):
+                    request.POST['ct'] += Vernam.txtcvt(Vernam.xoring(Vernam.binary(i),Vernam.binary(request.POST['key']))) + " "
+                request.POST['ct'] = request.POST['ct'][0:-1]
+                form = VernamForm(request.POST)
+            return render(request, "vernam.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = VernamForm()
+    return render(request,"vernam.html",{"form":form})
