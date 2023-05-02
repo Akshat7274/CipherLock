@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm
 import math
 
 # Create your views here.
@@ -210,3 +210,58 @@ def rcTransform(request):
     else:
         form = RCTForm()
     return render(request,"rc-transform.html",{"form":form})
+
+def des(request):
+    if request.method == "POST":
+        form = DESForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                inp = request.POST['ct']
+                key = request.POST['key']
+                hexinp = ""
+                for i in inp:
+                    hexinp += DES.toTxt(DES.toBin(i,8))
+                hexkey = ""
+                for i in key:
+                    hexkey += DES.toTxt(DES.toBin(i,8))
+                dec = DES.decrypt(hexinp,hexkey)
+                txt = ""
+                for i in dec:
+                    txt += DES.toBin(i)
+                fin = DES.toTxt(txt,8)
+                it = -1
+                while (fin[it]==" "):
+                    it -= 1
+                if (it==-1):
+                    it = len(fin) - 1
+                fin = fin[:it+1]
+                request.POST['pt'] = fin
+                form = DESForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                inp = request.POST['pt']
+                key = request.POST['key']
+                if (len(inp)%8!=0):
+                    inp += " " * (8 - (len(inp) % 8))
+                hexinp = ""
+                for i in inp:
+                    hexinp += DES.toTxt(DES.toBin(i,8))
+                hexkey = ""
+                for i in key:
+                    hexkey += DES.toTxt(DES.toBin(i,8))
+                enc = DES.encrypt(hexinp,hexkey)
+                txt = ""
+                for i in enc:
+                    txt += DES.toBin(i)
+                request.POST['ct'] = DES.toTxt(txt,8)
+                form = DESForm(request.POST)
+            return render(request, "des.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = DESForm()
+    return render(request,"des.html",{"form":form})
