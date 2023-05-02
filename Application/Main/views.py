@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew
 from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm
 import math
 
@@ -166,3 +166,25 @@ def railfence(request):
     else:
         form = RailfenceForm()
     return render(request,"railfence-conv.html",{"form":form})
+
+def railfenceNew(request):
+    if request.method == "POST":
+        form = RailfenceForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                request.POST['pt'] = RailfenceNew.decrypt(request.POST['ct'],int(request.POST['key']))
+                form = RailfenceForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                request.POST['ct'] = RailfenceNew.encrypt(request.POST['pt'],int(request.POST['key']))
+                form = RailfenceForm(request.POST)
+            return render(request, "railfence-new.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = RailfenceForm()
+    return render(request,"railfence-new.html",{"form":form})
