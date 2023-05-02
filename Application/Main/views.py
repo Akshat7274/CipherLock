@@ -1,7 +1,7 @@
-from django.http import QueryDict
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from Ciphers import Caesar, Playfair
-from .forms import CaesarForm, PlayfairForm
+from django.shortcuts import render
+from Ciphers import Caesar, Playfair, Hill
+from .forms import CaesarForm, PlayfairForm, HillForm
+import math
 
 # Create your views here.
 
@@ -59,3 +59,38 @@ def playfair(request):
     else:
         form = PlayfairForm()
     return render(request,"playfair.html",{"form":form})
+
+def hill(request):
+    if request.method == "POST":
+        form = HillForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            l = len(request.POST['key'])
+            if (math.sqrt(l)!=int(math.sqrt(l))):
+                error = "The entered key is not valid! Kindly enter an NxN key"
+            elif (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                request.POST['pt'] = ""
+                for i in request.POST['ct'].split(" "):
+                    response = Hill.decrypt(i,request.POST['key'],l)
+                    for i in response:
+                        if (i.islower()):
+                            request.POST['pt'] += i
+                    request.POST['pt'] += " "
+                request.POST['pt'] = request.POST['pt'][0:-1]
+                form = HillForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                request.POST['ct'] = ""
+                for i in request.POST['pt'].split(" "):
+                    request.POST['ct'] += Hill.encrpyt(i,request.POST['key'],l) + " "
+                request.POST['ct'] = request.POST['ct'][0:-1]
+                form = HillForm(request.POST)
+            return render(request, "hill.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = HillForm()
+    return render(request,"hill.html",{"form":form})
