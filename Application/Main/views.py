@@ -1,7 +1,7 @@
 import random
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES, DiffieHellman
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm, DFForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES, DiffieHellman, ElGamal
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm, DFForm, ElGamalForm
 import math
 
 # Create your views here.
@@ -359,3 +359,44 @@ def diffieHellman(request):
     else:
         form = DFForm()
     return render(request,"diffie-hellman.html",{"form":form})
+
+def elGamal(request):
+    if request.method == "POST":
+        form = ElGamalForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            isPrime = True
+            for i in range(2,int(request.POST['q'])):
+                if (int(request.POST['q'])%i==0):
+                    isPrime = False
+                    break
+            if (not isPrime):
+                error = "The entered number is not a Prime Number"
+            elif (int(request.POST.get("a")) not in ElGamal.primitiveRoot(int(request.POST['q']))):
+                error = request.POST['a'] + " is not a primitive root of " + request.POST['q'] + ". Please enter one of the following values: " + str(DiffieHellman.primitiveRoot(int(request.POST['q'])))
+            else:
+                extra = "Explanation of Encryption"
+                inp = int(request.POST['q'])
+                root = int(request.POST['a'])
+                request.POST['xa'] = random.randint(2,inp-1)
+                request.POST['ya'] = (root ** request.POST['xa']) % inp
+                request.POST['m'] = random.randint(1,inp-1)
+                request.POST['k'] = random.randint(2,inp-1)
+                while (ElGamal.gcd(inp-1,request.POST['k'])!=1):
+                    request.POST['k'] = random.randint(2,inp-1)
+                request.POST['ki'] = ElGamal.inverse(request.POST['k'],inp-1)
+                request.POST['s1'] = (root ** request.POST['k']) % inp
+                request.POST['s2'] = (request.POST['ki'] * (request.POST['m'] - (request.POST['xa'] * request.POST['s1']))) % (inp - 1)
+                request.POST['v1'] = (root ** request.POST['m']) % inp
+                request.POST['v2'] = ((request.POST['ya'] ** request.POST['s1']) * (request.POST['s1'] ** request.POST['s2'])) % inp
+                if (request.POST['v1'] == request.POST['v2']):
+                    request.POST['verify'] = "Verified (Signs Match)"
+                else:
+                    request.POST['verify'] = "Failed"
+                form = ElGamalForm(request.POST)
+            return render(request, "el-gamal.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = ElGamalForm()
+    return render(request,"el-gamal.html",{"form":form})

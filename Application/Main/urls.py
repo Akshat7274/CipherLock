@@ -14,4 +14,5 @@ urlpatterns = [
     path("des", views.des, name="des"),
     path("aes", views.aes, name="aes"),
     path("diffie-hellman", views.diffieHellman, name="diffie-hellman"),
+    path("el-gamal", views.elGamal, name="el-gamal"),
 ]
