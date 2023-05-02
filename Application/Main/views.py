@@ -25,7 +25,6 @@ def caesar(request):
                 extra = "Explanation of Encryption"
                 request.POST['ct'] = Caesar.encrypt(request.POST['pt'],int(request.POST['key']))
                 form = CaesarForm(request.POST)
-            print(form)
             return render(request, "caesar.html", {"form":form, "error":error, "extra":extra})
     else:
         form = CaesarForm()
