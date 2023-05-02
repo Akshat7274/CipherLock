@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm
 import math
 
 # Create your views here.
@@ -265,3 +265,58 @@ def des(request):
     else:
         form = DESForm()
     return render(request,"des.html",{"form":form})
+
+def aes(request):
+    if request.method == "POST":
+        form = AESForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            if (request.POST.get("pt")=="" and request.POST.get("ct")==""):
+                error = "Please enter a Plaintext / Ciphertext to perform Encryption / Decryption"
+            elif (request.POST.get("pt")==""):
+                extra = "Explanation of Decryption"
+                inp = request.POST['ct']
+                key = request.POST['key']
+                hexinp = ""
+                for i in inp:
+                    hexinp += AES.toTxt(AES.toBin(i,8))
+                hexkey = ""
+                for i in key:
+                    hexkey += AES.toTxt(AES.toBin(i,8))
+                dec = AES.decrypt(hexinp,hexkey)
+                txt = ""
+                for i in dec:
+                    txt += AES.toBin(i)
+                fin = AES.toTxt(txt,8)
+                it = -1
+                while (fin[it]==" "):
+                    it -= 1
+                if (it==-1):
+                    it = len(fin) - 1
+                fin = fin[:it+1]
+                request.POST['pt'] = fin
+                form = AESForm(request.POST)
+            elif (request.POST.get("ct")==""):
+                extra = "Explanation of Encryption"
+                inp = request.POST['pt']
+                key = request.POST['key']
+                if (len(inp)%16!=0):
+                    inp += " " * (16 - (len(inp) % 16))
+                hexinp = ""
+                for i in inp:
+                    hexinp += AES.toTxt(AES.toBin(i,8))
+                hexkey = ""
+                for i in key:
+                    hexkey += AES.toTxt(AES.toBin(i,8))
+                enc = AES.encrypt(hexinp,hexkey)
+                txt = ""
+                for i in enc:
+                    txt += AES.toBin(i)
+                request.POST['ct'] = AES.toTxt(txt,8)
+                form = AESForm(request.POST)
+            return render(request, "aes.html", {"form":form, "error":error, "extra":extra})
+    else:
+        form = AESForm()
+    return render(request,"aes.html",{"form":form})

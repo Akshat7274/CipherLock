@@ -12,4 +12,5 @@ urlpatterns = [
     path("railfence-new", views.railfenceNew, name="railfence-new"),
     path("rc-transform", views.rcTransform, name="rc-transform"),
     path("des", views.des, name="des"),
+    path("aes", views.aes, name="aes"),
 ]
