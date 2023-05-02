@@ -93,3 +93,21 @@ class VernamForm(forms.Form):
         'placeholder' : "Ciphertext",
         'autocomplete' : "off"
     }), required=False)
+
+class RailfenceForm(forms.Form):
+    key = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "Secret Key",
+        'autocomplete' : "off",
+        'min' : 1
+    }), required=True)
+    pt = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Plaintext",
+        'autocomplete' : "off"
+    }), required=False)
+    ct = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Ciphertext",
+        'autocomplete' : "off"
+    }), required=False)

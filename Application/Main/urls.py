@@ -8,4 +8,5 @@ urlpatterns = [
     path("hill", views.hill, name="hill"),
     path("vigenere", views.vigenere, name="vigenere"),
     path("vernam", views.vernam, name="vernam"),
+    path("railfence-conv", views.railfence, name="railfence-conv"),
 ]
