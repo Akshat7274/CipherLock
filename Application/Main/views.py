@@ -1,7 +1,8 @@
 import random
 from django.shortcuts import render
-from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES, DiffieHellman, ElGamal
-from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm, DFForm, ElGamalForm
+import sympy
+from Ciphers import Caesar, Playfair, Hill, Vigenere, Vernam, Railfence, RailfenceNew, RCTransform, DES, AES, RSA, DiffieHellman, ElGamal
+from .forms import CaesarForm, PlayfairForm, HillForm, VigenereForm, VernamForm, RailfenceForm, RCTForm, DESForm, AESForm, RSAForm, DFForm, ElGamalForm
 import math
 
 # Create your views here.
@@ -339,7 +340,6 @@ def diffieHellman(request):
             elif (int(request.POST.get("a")) not in DiffieHellman.primitiveRoot(int(request.POST['q']))):
                 error = request.POST['a'] + " is not a primitive root of " + request.POST['q'] + ". Please enter one of the following values: " + str(DiffieHellman.primitiveRoot(int(request.POST['q'])))
             else:
-                extra = "Explanation of Encryption"
                 inp = int(request.POST['q'])
                 root = int(request.POST['a'])
                 request.POST['xa'] = random.randint(2,inp-1)
@@ -377,7 +377,6 @@ def elGamal(request):
             elif (int(request.POST.get("a")) not in ElGamal.primitiveRoot(int(request.POST['q']))):
                 error = request.POST['a'] + " is not a primitive root of " + request.POST['q'] + ". Please enter one of the following values: " + str(DiffieHellman.primitiveRoot(int(request.POST['q'])))
             else:
-                extra = "Explanation of Encryption"
                 inp = int(request.POST['q'])
                 root = int(request.POST['a'])
                 request.POST['xa'] = random.randint(2,inp-1)
@@ -400,3 +399,49 @@ def elGamal(request):
     else:
         form = ElGamalForm()
     return render(request,"el-gamal.html",{"form":form})
+
+def rsa(request):
+    if request.method == "POST":
+        form = RSAForm(request.POST)
+        if form.is_valid():
+            error = ""
+            extra = ""
+            request.POST._mutable = True
+            chs = [4,8,16,32,64,128,256,512,1024,2048,4096]
+            if int(request.POST['b']) not in chs:
+                error = "The input for no. of bits is not one of the given choices"
+            else:
+                p = RSA.primeGen(int(request.POST['b']))
+                q = p
+                while (q==p):
+                    q = RSA.primeGen(int(request.POST['b']))
+                n = p * q
+                phi = (p - 1) * (q - 1)
+                e = random.randint(2,phi-1)
+                while(math.gcd(phi,e)!=1):
+                    e = random.randint(2,phi-1)
+                d = RSA.inverse(e,phi)
+                exp = 0
+                numtxt = str(e)
+                for i in range(len(numtxt)):
+                    exp = ((exp * 10 + ord(numtxt[i]) - 48) % (n - 1))
+                dexp = 0
+                dnumtxt = str(d)
+                for i in range(len(dnumtxt)):
+                    dexp = ((dexp * 10 + ord(dnumtxt[i]) - 48) % (n - 1))
+                enc = RSA.power(int(request.POST['m']),exp,n)
+                dec = RSA.power(enc,dexp,n)
+
+                request.POST['p'] = str(p)
+                request.POST['q'] = str(q)
+                request.POST['n'] = str(n)
+                request.POST['phi'] = str(phi)
+                request.POST['e'] = str(e)
+                request.POST['d'] = str(d)
+                request.POST['enc'] = str(enc)
+                request.POST['dec'] = str(dec)
+            form = RSAForm(request.POST)
+            return render(request,"rsa.html",{"form":form, "error" : error, "extra" : extra})
+    else:
+        form = RSAForm()
+    return render(request,"rsa.html",{"form":form})

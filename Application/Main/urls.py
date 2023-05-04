@@ -13,6 +13,7 @@ urlpatterns = [
     path("rc-transform", views.rcTransform, name="rc-transform"),
     path("des", views.des, name="des"),
     path("aes", views.aes, name="aes"),
+    path("rsa", views.rsa, name="rsa"),
     path("diffie-hellman", views.diffieHellman, name="diffie-hellman"),
     path("el-gamal", views.elGamal, name="el-gamal"),
 ]

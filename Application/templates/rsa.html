@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cipher WebApp | RSA
+{% endblock title %}
+
+{% block body %}
+    <h1 class="form-title">Rivest-Shamir-Adleman (RSA) Algorithm</h1>
+    <div class="form-container">
+        <form action="/rsa" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-3" style="margin-top: 3% !important;">
+                    {{ form.b }}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-3" style="margin-top: 3% !important;">
+                    {{ form.m }}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.p }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.q }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.n }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.phi }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.e }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.d }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.enc }}
+                </div>
+                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
+                    {{ form.dec }}
+                </div>
+            </div>
+            <div class="form-group col-md-12 text-center">
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </div>
+            <br>
+            <p class="error-text">{{ error }}</p>
+        </form>
+    </div>
+    <br><br>
+    <!-- <h1>{{ extra }}</h1> -->
+    <script>
+        var leftClass = 'toggle-left';
+        var rightClass = 'toggle-right';
+
+        function toggle() {
+            var arrow = document.querySelector('.fa-arrow-circle-right');
+            if (~arrow.className.indexOf(rightClass)) {
+                arrow.className = arrow.className.replace(rightClass, leftClass);
+            } else {
+                arrow.className = arrow.className.replace(leftClass, rightClass);
+            }
+        }
+    </script>
+{% endblock body %}

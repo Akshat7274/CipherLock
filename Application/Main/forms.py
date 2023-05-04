@@ -265,3 +265,67 @@ class ElGamalForm(forms.Form):
         'placeholder' : "Verification Status",
         'autocomplete' : "off"
     }), required=False)
+
+bits = [(4,"4"),(8,"8"),(16,"16"),(32,"32"),(64,"64"),(128,"128"),(256,"256"),(512,"512"),(1024,"1024"),(2048,"2048"),(4096,"4096")]
+
+class RSAForm(forms.Form):
+    b = forms.IntegerField(widget=forms.Select(attrs={
+        'class' : "form-control",
+        'placeholder' : "Bits",
+        'autocomplete' : "off"
+    }, choices = bits), 
+    required = True,
+    )
+    m = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class' : "form-control",
+        'placeholder' : "Message",
+        'autocomplete' : "off"
+    }), required=True)
+    p = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Prime Number 1",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    q = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Prime Number 2",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    n = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "n = p * q",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    phi = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "φ(n) = (p-1) * (q-1)",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    e = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Public Key for Encryption (e)",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    d = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Private Key for Encryption (d)",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    enc = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Encrypted Message",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)
+    dec = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : "form-control",
+        'placeholder' : "Decrypted Message",
+        'autocomplete' : "off",
+        'rows' : 2
+    }), required=False)

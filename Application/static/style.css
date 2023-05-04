@@ -55,6 +55,10 @@ body {
     color: #0213aa;
 }
 
+.rsa .form-control{
+    font-size: 13px;
+}
+
 .fa-arrow-circle-right{
     transition: all 1s 0.2s;
 }
