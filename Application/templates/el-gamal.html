@@ -1,90 +1,164 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load nbsp %}
 
-{% block title %}
-Cipher WebApp | El Gamal
-{% endblock title %}
+{% block title %} El-Gamal Algorithm{% endblock title %}
 
-{% block body %}
-    <h1 class="form-title">El Gamal Digital Signature Algorithm</h1>
-    <div class="form-container">
-        <form action="/el-gamal" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.q }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.a }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.xa }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.ya }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-2" style="margin-top: 1.5% !important;">
-                    {{ form.m }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-2" style="margin-top: 1.5% !important;">
-                    {{ form.k }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-2" style="margin-top: 1.5% !important;">
-                    {{ form.ki }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.s1 }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.s2 }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.v1 }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.v2 }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-4"></div>
-                <div class="form-group col-md-4" style="margin-top: 1.5% !important;">
-                    {{ form.verify }}
-                </div>
-                <div class="col-md-4"></div>
-            </div>
-            <div class="form-group col-md-12 text-center">
-                <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-            <br>
-            <p class="error-text">{{ error }}</p>
-        </form>
-    </div>
-    <br><br>
-    <!-- <h1>{{ extra }}</h1> -->
-    <script>
-        var leftClass = 'toggle-left';
-        var rightClass = 'toggle-right';
+{% block content %}
+	<script>
+		window.addEventListener("load", () => {
+			const tester = document.querySelector(".post-tester").getAttribute("value")
+			if(tester){
+				document.querySelector("#form-section").scrollIntoView({behavior:"smooth"})
+				// document.querySelector(".explanation-section").setAttribute('style',"display: block;")
+				if(document.querySelector("#sign").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#dec-result").getElementsByTagName("br").length!==0){
+					document.querySelector("#decpy").setAttribute('style',"display: block;")
+				}
+			}
+			else {
+				document.querySelector(".explanation-section").setAttribute('style',"display: none;")
+				document.querySelector("#encpy").setAttribute('style',"display: none;")
+				document.querySelector("#decpy").setAttribute('style',"display: none;")
+			}
+		})
 
-        function toggle() {
-            var arrow = document.querySelector('.fa-arrow-circle-right');
-            if (~arrow.className.indexOf(rightClass)) {
-                arrow.className = arrow.className.replace(rightClass, leftClass);
-            } else {
-                arrow.className = arrow.className.replace(leftClass, rightClass);
-            }
-        }
-    </script>
-{% endblock body %}
+		function copyEncOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("sign"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#encpy').setAttribute("style","color: magenta; display: block;")
+		}
+
+		function copyDecOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("dec-result"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#decpy').setAttribute("style","color: magenta; display: block;")
+			document.getElementById('dec-input').value = ''
+		}
+
+		function gcd(a,b) {
+			if (b==0){
+				return a
+			}
+			else {
+				return gcd(b,a%b)
+			}
+		}
+
+		function generateKey() {
+			prime = document.getElementById("prime").value
+			if (prime){
+				gen = Math.floor(Math.random()*(prime-2))+2
+				document.getElementById("s-priv").value = gen
+				document.querySelector("#priv-cog").setAttribute('style',"color: magenta; float: right;")
+			}
+			else {
+				document.getElementById("s-priv").placeholder = "Select Prime No. First"
+			}
+		}
+
+		function generateNum() {
+			prime = document.getElementById("prime").value
+			if (prime){
+				gen = Math.floor(Math.random()*(prime-2))+2
+				while (gcd(prime-1,gen)!=1){
+					gen = Math.floor(Math.random()*(prime-2))+2
+				}
+				document.getElementById("rnd").value = gen
+				document.querySelector("#rand-cog").setAttribute('style',"color: magenta; float: right;")
+			}
+			else {
+				document.getElementById("rnd").placeholder = "Select Prime No. First"
+			}
+		}
+	</script>
+	<!-- Page top section -->
+	<section class="page-top-section set-bg" data-setbg="{% static 'img/page-top-bg/4.jpg' %}">
+		<div class="page-info text-center">
+			<h2>El-Gamal Algorithm</h2>
+			<div class="site-breadcrumb">
+				<a href=""><span>Public Key Cryptography</span></a>  /
+				<a href=""><span>Key Exchange</span></a>
+			</div>
+		</div>
+	</section>
+	<!-- Page top end-->
+
+	<!-- Contact page -->
+	<section class="intro-section" style="height: 330px; padding: 5%;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 order-2 order-lg-1">
+					<p style="color: white;">
+						The ElGamal encryption algorithm is a public key encryption algorithm that is based on the Diffie-Hellman key exchange. It uses a cyclic group of integers modulo a prime number and the discrete logarithm problem for encryption and decryption. The sender generates a public key and a private key, and uses the private key to encrypt the message. The receiver then uses the sender's public key to decrypt the message, and veryify the identity of the user, thus acting as a digital siganture. ElGamal encryption is used for secure communications and is also used in digital signatures and other cryptographic applications.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- Contact page -->
+	<section class="contact-page" id="form-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 mb-5">
+					<h1 class="text-white text-center">Try It!</h1>
+				</div>
+				<div class="col-lg-12 order-2 order-lg-1">
+					<form class="contact-form" action="/el-gamal" method="post">
+						{% csrf_token %}
+						<div class="row">
+							{{ form.m }}
+							<div class="col-lg-8 row">
+								<div class="col-lg-2"></div>
+								{{ form.q }}
+								<div class="col-lg-2"></div>
+								{{ form.a }}
+								<div class="col-lg-2"><i class="fa fa-cog generate-icon" title="Generate Key" id="priv-cog" onclick="generateKey()" style="float: right;"></i></div>
+								{{ form.xa }}
+								<div class="col-lg-2"><i class="fa fa-cog generate-icon" title="Generate Number" id="rand-cog" onclick="generateNum()" style="float: right;"></i></div>
+								{{ form.k }}
+							</div>
+							{{ form.verify }}
+							<div class="col-lg-8 text-center one-line-res" style="height: 20px;">
+								{{ result }} <span id="sign" style="color: magenta;">{{ sign }}</span> <i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="encpy" onclick="copyEncOutput()"></i>
+							</div>
+							<p class="error-text">{{ error }}</p>
+							<!-- <div class="col-lg-9 text-center scroll-text">
+								<p>Scroll to understand output</p>
+							</div>	 -->
+						</div>
+						<div class="col-lg-3 text-center">
+							<button class="site-btn" id="submit-btn" type="submit">Encrypt / Decrypt<img src="{% static 'img/icons/double-arrow.png' %}" alt="#"/></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+	<!-- Contact page -->
+	<section class="intro-section explanation-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="text-center text-white">{{ extra }}</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+{% endblock content %}

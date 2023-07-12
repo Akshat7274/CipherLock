@@ -1,53 +1,136 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load nbsp %}
 
-{% block title %}
-Cipher WebApp | Railfence Cipher
-{% endblock title %}
+{% block title %} Railfence Cipher (Conventional) {% endblock title %}
 
-{% block body %}
-    <h1 class="form-title">Railfence Cipher (Conventional Method)</h1>
-    <div class="form-container">
-        <form action="/railfence-conv" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4">
-                    {{ form.pt }}
-                </div>
-                <div class="col-md-2"></div>
-                <!-- <div class="form-group col-md-2 text-center">
-                    <i class="fa fa-arrow-circle-right toggle-right" style="font-size: 30px;" onclick="toggle()"></i>
-                </div> -->
-                <div class="form-group col-md-4">
-                    {{ form.ct }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-4"></div>
-                <div class="form-group col-md-4">
-                    {{ form.key }}
-                </div>
-                <div class="col-md-4"></div>
-            </div>
-            <div class="form-group col-md-12 text-center">
-                <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-            <br>
-            <p class="error-text">{{ error }}</p>
-        </form>
-    </div>
-    <br><br>
-    <!-- <h1>{{ extra }}</h1> -->
-    <script>
-        var leftClass = 'toggle-left';
-        var rightClass = 'toggle-right';
+{% block content %}
+	<script>
+		window.addEventListener("load", () => {
+			const tester = document.querySelector(".post-tester").getAttribute("value")
+			if(tester){
+				document.querySelector("#form-section").scrollIntoView({behavior:"smooth"})
+				// document.querySelector(".explanation-section").setAttribute('style',"display: block;")
+				if(document.querySelector("#enc-result").getElementsByTagName("br").length!==0){
+					document.querySelector("#encpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#dec-result").getElementsByTagName("br").length!==0){
+					document.querySelector("#decpy").setAttribute('style',"display: block;")
+				}
+			}
+			else {
+				document.querySelector(".explanation-section").setAttribute('style',"display: none;")
+				document.querySelector("#encpy").setAttribute('style',"display: none;")
+				document.querySelector("#decpy").setAttribute('style',"display: none;")
+			}
+		})
 
-        function toggle() {
-            var arrow = document.querySelector('.fa-arrow-circle-right');
-            if (~arrow.className.indexOf(rightClass)) {
-                arrow.className = arrow.className.replace(rightClass, leftClass);
-            } else {
-                arrow.className = arrow.className.replace(leftClass, rightClass);
-            }
-        }
-    </script>
-{% endblock body %}
+		function copyEncOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("enc-result"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#encpy').setAttribute("style","color: magenta; display: block;")
+			document.getElementById('enc-input').value = ''
+		}
+
+		function copyDecOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("dec-result"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#decpy').setAttribute("style","color: magenta; display: block;")
+			document.getElementById('dec-input').value = ""
+		}
+	</script>
+	<!-- Page top section -->
+	<section class="page-top-section set-bg" data-setbg="{% static 'img/page-top-bg/4.jpg' %}">
+		<div class="page-info text-center">
+			<h2>Railfence Cipher</h2>
+			<div class="site-breadcrumb">
+				<a href=""><span>Private Key Cryptography</span></a>  /
+				<a href=""><span>Classical Ciphers</span></a> /
+				<a href=""><span>Transposition Ciphers</span></a>
+			</div>
+		</div>
+	</section>
+	<!-- Page top end-->
+
+	<!-- Contact page -->
+	<section class="intro-section" style="height: 330px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 order-2 order-lg-1">
+					<p style="color: white;">
+						The Railfence Cipher is a transposition cipher that arranges the plaintext across a set number of rails or rows. The letters are then read off row by row to create the ciphertext. It is a simple and easy-to-implement cipher, but it is not very secure and can be easily broken using frequency analysis or other methods. In the conventional method, the text is written row-wise and read column-wise.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- Contact page -->
+	<section class="contact-page" id="form-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 mb-5">
+					<h1 class="text-white text-center">Try It!</h1>
+				</div>
+				<div class="col-lg-12 order-2 order-lg-1">
+					<form class="contact-form" action="/railfence-conv" method="post">
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-lg-4"></div>
+							{{ form.key }}
+							<div class="col-lg-4"></div>
+							{{ form.pt }}
+							<div class="col-lg-6" style="margin-top: -2%;">
+								<div class="text-white text-center"><b>Encrypted Text</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="encpy" onclick="copyEncOutput()"></i></div>
+								<div class="display-result" id="enc-result">
+									{% for i in enc %}
+										{{ i|nbsp }}<br>
+									{% endfor %}
+								</div>
+							</div>
+							{{ form.ct }}
+							<div class="col-lg-6" style="margin-top: -2%;">
+								<div class="text-white text-center"><b>Decrypted Text</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="decpy" onclick="copyDecOutput()"></i></div>
+								<div class="display-result" id="dec-result">
+									{% for i in dec %}
+										{{ i|nbsp }}<br>
+									{% endfor %}
+								</div>
+							</div>
+							<p class="error-text">{{ error }}</p>
+							<!-- <div class="col-lg-9 text-center scroll-text">
+								<p>Scroll to understand output</p>
+							</div>	 -->
+						</div>
+						<div class="col-lg-3 text-center">
+							<button class="site-btn" id="submit-btn" type="submit">Encrypt / Decrypt<img src="{% static 'img/icons/double-arrow.png' %}" alt="#"/></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+	<!-- Contact page -->
+	<section class="intro-section explanation-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="text-center text-white">{{ extra }}</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+{% endblock content %}

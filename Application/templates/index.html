@@ -1,57 +1,119 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}
-Cipher WebApp
-{% endblock title %}
+{% block title %}Home{% endblock title %}
 
-{% block body %}
-<h1 class="text-center">Cipher WebApp</h1>
-<h5 class="text-center">(For Cryptographic Algorithms)</h5>
-<div class="row" style="margin-top: 2%;">
-    <div class="col-md-6">
-        <h3 class="text-center" style="color: blue">Private Key Cryptography</h3>
-        <ul style="margin-top: 3%;">
-            <li><b>Classical Ciphers</b></li>
-            <ul>
-                <li><i>Substitution Ciphers</i></li>
-                <ul>
-                    <li>Caesar Cipher</li>
-                    <li>Playfair Cipher</li>
-                    <li>Hill Cipher</li>
-                    <li>Vigenere Cipher</li>
-                    <li>Vernam Cipher</li>
-                </ul>
-                <li><i>Transposition Ciphers</i></li>
-                <ul>
-                    <li>Railfence Cipher (Conventional Method)</li>
-                    <li>Railfence Cipher (New Method)</li>
-                    <li>Row Column Transformation Cipher</li>
-                </ul>
-            </ul>
-            <li><b>Modern Ciphers</b></li>
-            <ul>
-                <li>Data Encryption Standard (DES)</li>
-                <li>Advanced Encryption Standard (AES)</li>
-            </ul>
-        </ul>
+{% block content %}
+<!-- Hero section -->
+<section class="hero-section overflow-hidden">
+    <div class="hero-slider owl-carousel">
+        <div class="hero-item set-bg d-flex align-items-center justify-content-center text-center" data-setbg="{% static 'img/slider-bg-1.jpg' %}">
+            <div class="container">
+                <h2>Easy to Use</h2>
+                <p style="margin-top: 5%;">Simple and User Friendly interface for better User Experience. Encrypt and Decrypt complicated messages in seconds with a single click.</p>
+            </div>
+        </div>
+        <div class="hero-item set-bg d-flex align-items-center justify-content-center text-center" data-setbg="{% static 'img/slider-bg-2.jpg' %}">
+            <div class="container">
+                <h2>Variety of Ciphers</h2>
+                <p style="margin-top: 5%;">Provides a large variety of ciphers, ranging from absolutely basic Caesar Cipher, to industry standard algorithms like AES and RSA.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h3 class="text-center" style="color: blue">Public Key Cryptography</h3>
-        <ul style="margin-top: 3%;">
-            <li><b>Encryption Algorithm</b></li>
-            <ul>
-                <li>RSA Algorithm</li>
-            </ul>
-            <li><b>Key Generation Algorithm</b></li>
-            <ul>
-                <li>Diffie Hellman Algorithm</li>
-            </ul>
-            <li><b>Digital Signature Algorithm</b></li>
-            <ul>
-                <li>El Gamal Algorithm</li>
-            </ul>
-        </ul>
+</section>
+<!-- Hero section end-->
+
+<!-- Featured section -->
+<section class="featured-section">
+    <div class="featured-bg set-bg" data-setbg="{% static 'img/cryptography.webp' %}"></div>
+    <div class="featured-box">
+        <div class="text-box">
+            <div class="top-meta"><h3>CipherLock : <span style="color: aliceblue;">The Cryptography Web App</span></h3></div>
+            <p style="text-align: justify;">CipherLock is a web application that offers a comprehensive suite of encryption techniques, incorporating various ciphers and algorithms to ensure robust data security. With CipherLock, you can better understand the concepts of encryption and decryption that take place in these different ciphers.<br>
+                At the core of CipherLock lies a collection of powerful encryption algorithms, including DES, AES, RSA, Diffie-Hellman, etc. These algorithms provide secure communication, end-to-end encryption, and key establishment between parties. <br>
+                CipherLock presents these encryption techniques through a user-friendly web interface, making it easy for users to encrypt, decrypt, and secure personal messages. CipherLock simplifies the mechanism to secure communication between two or more users, by and extremely user friendly design.<br></p>
+        </div>
     </div>
-    <div class="col-md-12 text-center">This app contains these cryptographic algorithms. You can navigate through them from the Navigation Bar!</div>
-</div>
-{% endblock body %}
+</section>
+<!-- Featured section end-->
+
+<!-- Intro section -->
+<section class="intro-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6" style="padding: 0% 3%;">
+                <div class="intro-text-box text-box text-white row">
+                    <div class="top-meta"><h3><a href="" style="cursor: default;">Private</a> Key Cryptography</h3></div>
+                    <p style="text-align: justify;">
+                        Private key cryptography, also known as symmetric cryptography, is a cryptographic method that uses the same key for both encryption and decryption. The key is kept secret and shared between the communicating parties. It provides efficient and fast encryption and decryption processes, making it suitable for securing data within closed systems where secure key exchange is feasible.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6" style="padding: 0% 3%;">
+                <div class="intro-text-box text-box text-white row">
+                    <div class="top-meta"><h3><a href="" style="cursor: default;">Public</a> Key Cryptography</h3></div>
+                    <p style="text-align: justify;">Public key cryptography, also known as asymmetric cryptography, is a cryptographic method that utilizes a pair of keys: a public key and a private key. The public key is used for encryption, while the private key is kept secret and used for decryption. It enables secure communication, digital signatures, and key exchange without the need for a shared secret key.</p>
+                 </div>
+            </div>
+            <table class="col-lg-12">
+                <thead>
+                    <th>
+                        <td colspan="3">The Cipher Table</td>
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="10">Private Key Cryptography</td>
+                        <td rowspan="8">Classical Ciphers</td>
+                        <td rowspan="5">Substitution Ciphers</td>
+                        <td class="cipher-name">Caesar Cipher</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Playfair Cipher</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Hill Cipher</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Vigenere Cipher</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Vernam Cipher</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">Transposition Ciphers</td>
+                        <td class="cipher-name">Railfence Cipher (Conventional)</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Railfence Cipher (New)</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Row Column Tranformation Cipher</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" colspan="2">Modern Ciphers</td>
+                        <td class="cipher-name">Data Encryption Standard (DES)</td>
+                    </tr>
+                    <tr>
+                        <td class="cipher-name">Advanced Encryption Standard (AES)</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">Public Key Cryptography</td>
+                        <td colspan="2">Encryption</td>
+                        <td class="cipher-name">Rivest-Shamir-Adleman (RSA)</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Key Exchange</td>
+                        <td class="cipher-name">Diffie-Hellman</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Digital Signature</td>
+                        <td class="cipher-name">El-Gamal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<!-- Intro section end -->
+{% endblock content %}

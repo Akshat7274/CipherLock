@@ -1,6 +1,3 @@
-import random
-import sympy
-
 def primitiveRoot(num):
     rts = []
     for i in range(2,num):

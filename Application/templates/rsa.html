@@ -1,69 +1,298 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load nbsp %}
 
-{% block title %}
-Cipher WebApp | RSA
-{% endblock title %}
+{% block title %} RSA Algorithm{% endblock title %}
 
-{% block body %}
-    <h1 class="form-title">Rivest-Shamir-Adleman (RSA) Algorithm</h1>
-    <div class="form-container">
-        <form action="/rsa" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-3" style="margin-top: 3% !important;">
-                    {{ form.b }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-3" style="margin-top: 3% !important;">
-                    {{ form.m }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.p }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.q }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.n }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.phi }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.e }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.d }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.enc }}
-                </div>
-                <div class="form-group col-md-6 rsa" style="margin-top: 1.5% !important;">
-                    {{ form.dec }}
-                </div>
-            </div>
-            <div class="form-group col-md-12 text-center">
-                <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-            <br>
-            <p class="error-text">{{ error }}</p>
-        </form>
-    </div>
-    <br><br>
-    <!-- <h1>{{ extra }}</h1> -->
-    <script>
-        var leftClass = 'toggle-left';
-        var rightClass = 'toggle-right';
+{% block content %}
+	<script>
+		window.addEventListener("load", () => {
+			document.getElementById("inp-p").setAttribute("style","display:none;")
+			document.getElementById("inp-q").setAttribute("style","display:none;")
+			document.getElementById("key-gen").setAttribute("style","display:none;")
+			if (document.getElementById("key-gen").value==-1){
+				document.getElementById("flag-key").style = "color: magenta;"
+				document.getElementById("flag-key").onclick = ""
+			}
+			const tester = document.querySelector(".post-tester").value
+			if(tester!=-1){
+				document.querySelector("#form-section").scrollIntoView({behavior:"smooth"})
+				// document.querySelector(".explanation-section").setAttribute('style',"display: block;")
+				if(document.querySelector("#rsa-p").textContent!==""){
+					document.querySelector("#p1cpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#rsa-q").textContent!==""){
+					document.querySelector("#p2cpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#rsa-n").textContent!==""){
+					document.querySelector("#ncpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#rsa-phi").textContent!==""){
+					document.querySelector("#phicpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#rsa-dec").textContent!==""){
+					document.querySelector("#decpy").setAttribute('style',"display: block;")
+				}
+			}
+			else {
+				document.querySelector(".explanation-section").setAttribute('style',"display: none;")
+				document.querySelector("#p1cpy").setAttribute('style',"display: none;")
+				document.querySelector("#p2cpy").setAttribute('style',"display: none;")
+				document.querySelector("#ncpy").setAttribute('style',"display: none;")
+				document.querySelector("#phicpy").setAttribute('style',"display: none;")
+				document.querySelector("#encpy").setAttribute('style',"display: none;")
+				document.querySelector("#decpy").setAttribute('style',"display: none;")
+			}
+		})
 
-        function toggle() {
-            var arrow = document.querySelector('.fa-arrow-circle-right');
-            if (~arrow.className.indexOf(rightClass)) {
-                arrow.className = arrow.className.replace(rightClass, leftClass);
-            } else {
-                arrow.className = arrow.className.replace(leftClass, rightClass);
-            }
-        }
-    </script>
-{% endblock body %}
+		function copyPrime1() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-p"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#p1cpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p2cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#ncpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#phicpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"color: white; display: block;")
+				}
+			if(document.querySelector("#rsa-dec").textContent!==""){
+				document.querySelector("#decpy").setAttribute('style',"color:white; display: block;")
+			}
+		}
+
+		function copyPrime2() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-q"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#p2cpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p1cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#ncpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#phicpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"color: white; display: block;")
+				}
+			if(document.querySelector("#rsa-dec").textContent!==""){
+				document.querySelector("#decpy").setAttribute('style',"color:white; display: block;")
+			}
+		}
+
+		function copyN() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-n"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#ncpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p2cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#p1cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#phicpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"color: white; display: block;")
+				}
+			if(document.querySelector("#rsa-dec").textContent!==""){
+				document.querySelector("#decpy").setAttribute('style',"color:white; display: block;")
+			}
+		}
+
+		function copyPhi() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-phi"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#phicpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p2cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#ncpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#p1cpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"color: white; display: block;")
+				}
+			if(document.querySelector("#rsa-dec").textContent!==""){
+				document.querySelector("#decpy").setAttribute('style',"color:white; display: block;")
+			}
+		}
+
+		function copyEncOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-enc"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#encpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p2cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#ncpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#phicpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#p1cpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-dec").textContent!==""){
+				document.querySelector("#decpy").setAttribute('style',"color:white; display: block;")
+			}
+			document.getElementById('enc-input').value = ''
+		}
+
+		function copyDecOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("rsa-dec"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#decpy').setAttribute("style","color: magenta; display: block;")
+			document.querySelector('#p2cpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#ncpy').setAttribute("style","color: white; display: block;")
+			document.querySelector('#phicpy').setAttribute("style","color: white; display: block;")
+			if(document.querySelector("#rsa-enc").textContent!==""){
+					document.querySelector("#encpy").setAttribute('style',"color: white; display: block;")
+				}
+			document.querySelector('#p1cpy').setAttribute("style","color: white; display: block;")
+			document.getElementById('dec-input').value = ''
+		}
+
+		function gcd(a,b) {
+			if (b==0){
+				return a
+			}
+			else {
+				return gcd(b,a%b)
+			}
+		}
+
+		function toggleKeyGen() {
+			var checker = document.getElementById("key-gen").value
+			if(checker==0) {
+				document.getElementById("priv-key").textContent = ""
+				document.getElementById("priv-key").readOnly = true
+				document.getElementById("flag-key").style = "color: magenta;"
+				document.getElementById("key-gen").value = 1
+			}
+			else if (checker==1) {
+				document.getElementById("priv-key").readOnly = false
+				document.getElementById("flag-key").style = ""
+				document.getElementById("key-gen").value = 0
+			}
+		}
+
+		function disableClick() {
+			document.getElementById("key-gen").value *= -1
+		}
+	</script>
+	<!-- Page top section -->
+	<section class="page-top-section set-bg" data-setbg="{% static 'img/page-top-bg/4.jpg' %}">
+		<div class="page-info text-center">
+			<h2>RSA Algorithm</h2>
+			<div class="site-breadcrumb">
+				<a href=""><span>Public Key Cryptography</span></a>  /
+				<a href=""><span>Key Exchange</span></a>
+			</div>
+		</div>
+	</section>
+	<!-- Page top end-->
+
+	<!-- Contact page -->
+	<section class="intro-section" style="height: 330px; padding: 5%;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 order-2 order-lg-1">
+					<p style="color: white;">
+						The Rivest-Shamir-Adleman (RSA) algorithm is a public key encryption algorithm that uses a pair of keys, a public key and a private key, to encrypt and decrypt messages. The public key can be freely distributed and is used to encrypt messages, while the private key is kept secret and is used to decrypt messages. RSA is based on the difficulty of factoring large numbers, and it uses prime numbers and modular arithmetic to generate the keys and perform the encryption and decryption. RSA is widely used in various applications, including secure communications, digital signatures, and secure online transactions.
+						<br>
+						<span style="color: red">Kindly Note: RSA Implementation is subject to the system's processing power. A general recommendation is to prefer low no. of bits and short input messages for testing purposes.</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- Contact page -->
+	<section class="contact-page" id="form-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 mb-5">
+					<h1 class="text-white text-center">Try It!</h1>
+				</div>
+				<div class="col-lg-12 order-2 order-lg-1">
+					<form class="contact-form" action="/rsa" method="post" onsubmit="disableClick()">
+						{% csrf_token %}
+						<div class="row">
+							{{ form.b }}
+							<div class="col-lg-1"></div>
+							<div class="col-lg-4 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>Prime Number 1</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="p1cpy" onclick="copyPrime1()"></i></div>
+								<div class="rsa-display" id="rsa-p">{{ p }}</div>
+							</div>
+							<div class="col-lg-4 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>Prime Number 2</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="p2cpy" onclick="copyPrime2()"></i></div>
+								<div class="rsa-display" id="rsa-q">{{ q }}</div>
+							</div>
+							{{ form.e }}
+							<div class="col-lg-1"><i class="fa fa-flag generate-icon" id="flag-key" title="Flag for Generating on Server Side" onclick="toggleKeyGen()"></i></div>
+							<div class="col-lg-4 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>n</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="ncpy" onclick="copyN()"></i></div>
+								<div class="rsa-display" id="rsa-n">{{ n }}</div>
+							</div>
+							<div class="col-lg-4 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>φ(n)</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="phicpy" onclick="copyPhi()"></i></div>
+								<div class="rsa-display" id="rsa-phi">{{ phi }}</div>
+							</div>
+							{{ form.m }}
+							<div class="col-lg-8 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>Encrypted Text</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="encpy" onclick="copyEncOutput()"></i></div>
+								<div class="rsa-display" id="rsa-enc">
+									{% for i in enc %}
+										{{ i|nbsp }}<br>
+									{% endfor %}
+								</div>
+							</div>
+							{{ form.enc }}
+							<div class="col-lg-8 rsa-out text-white text-center" style="margin-top: -2%;">
+								<div class="text-center"><b>Decrypted Text</b><i class="fa fa-copy copy-icon" title="Copy to Clipboard" id="decpy" onclick="copyDecOutput()"></i></div>
+								<div class="rsa-display" id="rsa-dec">
+									{% for i in dec %}
+										{{ i|nbsp }}<br>
+									{% endfor %}
+								</div>
+							</div>
+							{{ form.p }}
+							{{ form.q }}
+							{{ form.gen }}
+							<p class="error-text">{{ error }}</p>
+							<!-- <div class="col-lg-9 text-center scroll-text">
+								<p>Scroll to understand output</p>
+							</div>	 -->
+						</div>
+						<div class="col-lg-3 text-center">
+							<button class="site-btn" id="submit-btn" type="submit">Encrypt / Decrypt<img src="{% static 'img/icons/double-arrow.png' %}" alt="#"/></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+	<!-- Contact page -->
+	<section class="intro-section explanation-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="text-center text-white">{{ extra }}</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+{% endblock content %}

@@ -1,68 +1,162 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load nbsp %}
 
-{% block title %}
-Cipher WebApp | Diffie Hellman
-{% endblock title %}
+{% block title %} Diffie-Hellman Algorithm{% endblock title %}
 
-{% block body %}
-    <h1 class="form-title">Diffie Hellman Key Generation Algorithm</h1>
-    <div class="form-container">
-        <form action="/diffie-hellman" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4">
-                    {{ form.q }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4">
-                    {{ form.a }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4">
-                    {{ form.xa }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4">
-                    {{ form.xb }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-                <div class="form-group col-md-4">
-                    {{ form.ya }}
-                </div>
-                <div class="col-md-2"></div>
-                <div class="form-group col-md-4">
-                    {{ form.yb }}
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-4"></div>
-                <div class="form-group col-md-4">
-                    {{ form.key }}
-                </div>
-                <div class="col-md-4"></div>
-            </div>
-            <div class="form-group col-md-12 text-center">
-                <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-            <br>
-            <p class="error-text">{{ error }}</p>
-        </form>
-    </div>
-    <br><br>
-    <!-- <h1>{{ extra }}</h1> -->
-    <script>
-        var leftClass = 'toggle-left';
-        var rightClass = 'toggle-right';
+{% block content %}
+	<script>
+		window.addEventListener("load", () => {
+			const tester = document.querySelector(".post-tester").getAttribute("value")
+			if(tester){
+				document.querySelector("#form-section").scrollIntoView({behavior:"smooth"})
+				// document.querySelector(".explanation-section").setAttribute('style',"display: block;")
+				if(document.querySelector("#enc-result").getElementsByTagName("br").length!==0){
+					document.querySelector("#encpy").setAttribute('style',"display: block;")
+				}
+				if(document.querySelector("#dec-result").getElementsByTagName("br").length!==0){
+					document.querySelector("#decpy").setAttribute('style',"display: block;")
+				}
+			}
+			else {
+				document.querySelector(".explanation-section").setAttribute('style',"display: none;")
+				document.querySelector("#encpy").setAttribute('style',"display: none;")
+				document.querySelector("#decpy").setAttribute('style',"display: none;")
+			}
+		})
 
-        function toggle() {
-            var arrow = document.querySelector('.fa-arrow-circle-right');
-            if (~arrow.className.indexOf(rightClass)) {
-                arrow.className = arrow.className.replace(rightClass, leftClass);
-            } else {
-                arrow.className = arrow.className.replace(leftClass, rightClass);
-            }
-        }
-    </script>
-{% endblock body %}
+		function copyEncOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("enc-result"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#encpy').setAttribute("style","color: magenta; display: block;")
+			document.getElementById('enc-input').value = ''
+		}
+
+		function copyDecOutput() {
+			var range = document.createRange();
+			range.selectNode(document.getElementById("dec-result"));
+			window.getSelection().removeAllRanges(); // clear current selection
+			window.getSelection().addRange(range); // to select text
+			document.execCommand("copy");
+			window.getSelection().removeAllRanges();// to deselect
+			document.querySelector('#decpy').setAttribute("style","color: magenta; display: block;")
+			document.getElementById('dec-input').value = ''
+		}
+
+		function generateAKey() {
+			prime = document.getElementById("prime").value
+			if (prime){
+				gen = Math.floor(Math.random()*(prime-2))+2
+				document.getElementById("a-priv").value = gen
+				document.querySelector("#a-cog").setAttribute('style',"color: magenta; float: right;")
+			}
+			else {
+				document.getElementById("a-priv").placeholder = "Select Prime No. First"
+			}
+		}
+
+		function generateBKey() {
+			prime = document.getElementById("prime").value
+			if (prime){
+				gen = Math.floor(Math.random()*(prime-2))+2
+				document.getElementById("b-priv").value = gen
+				document.querySelector("#b-cog").setAttribute('style',"color: magenta;")
+			}
+			else {
+				document.getElementById("b-priv").placeholder = "Select Prime No. First"
+			}
+		}
+	</script>
+	<!-- Page top section -->
+	<section class="page-top-section set-bg" data-setbg="{% static 'img/page-top-bg/4.jpg' %}">
+		<div class="page-info text-center">
+			<h2>Diffie-Hellman Algorithm</h2>
+			<div class="site-breadcrumb">
+				<a href=""><span>Public Key Cryptography</span></a>  /
+				<a href=""><span>Key Exchange</span></a>
+			</div>
+		</div>
+	</section>
+	<!-- Page top end-->
+
+	<!-- Contact page -->
+	<section class="intro-section" style="height: 330px; padding: 5%;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 order-2 order-lg-1">
+					<p style="color: white;">
+						The Diffie-Hellman key exchange is a method for two parties to securely establish a shared secret key over an insecure channel. It is based on the difficulty of computing discrete logarithms in a finite field. Each party generates a private key and a public key, and they exchange their public keys. They then use their own private key and the other party's public key to compute a shared secret key. The shared key can be used for subsequent encryption and decryption using symmetric key encryption algorithms. The Diffie-Hellman key exchange is widely used in various applications, including secure communications and online transactions.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- Contact page -->
+	<section class="contact-page" id="form-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 mb-5">
+					<h1 class="text-white text-center">Try It!</h1>
+				</div>
+				<div class="col-lg-12 order-2 order-lg-1">
+					<form class="contact-form" action="/diffie-hellman" method="post">
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-lg-1"></div>
+							{{ form.q }}
+							<div class="col-lg-2"></div>
+							{{ form.a }}
+							<div class="col-lg-1"></div>
+							<div class="col-lg-1"><i class="fa fa-cog generate-icon" title="Generate Key" id="a-cog" onclick="generateAKey()" style="float: right;"></i></div>
+							{{ form.xa }}
+							<div class="col-lg-2"></div>
+							{{ form.xb }}
+							<div class="col-lg-1"><i class="fa fa-cog generate-icon" title="Generate Key" id="b-cog" onclick="generateBKey()"></i></div>
+							<div class="col-lg-1"></div>
+							<div class="col-lg-4">
+								<div class="text-white"><b>A'S PUBLIC KEY : </b>{{ apub }}</div>
+							</div>
+							<div class="col-lg-2"></div>
+							<div class="col-lg-4">
+								<div class="text-white"><b>B'S PUBLIC KEY : </b>{{ bpub }}</div>
+							</div>
+							<div class="col-lg-1"></div>
+							<div class="col-lg-2"></div>
+							<div class="col-lg-8">
+								<div class="text-center one-line-res">{{ result }}</div>
+							</div>
+							<div class="col-lg-2"></div>
+							<p class="error-text">{{ error }}</p>
+							<!-- <div class="col-lg-9 text-center scroll-text">
+								<p>Scroll to understand output</p>
+							</div>	 -->
+						</div>
+						<div class="col-lg-3 text-center">
+							<button class="site-btn" id="submit-btn" type="submit">Encrypt / Decrypt<img src="{% static 'img/icons/double-arrow.png' %}" alt="#"/></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+	<!-- Contact page -->
+	<section class="intro-section explanation-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="text-center text-white">{{ extra }}</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Contact page end-->
+
+{% endblock content %}

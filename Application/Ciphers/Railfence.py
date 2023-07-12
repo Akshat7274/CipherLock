@@ -49,7 +49,6 @@ def decrypt(txt,ky):
             mat[cr].append(txt[i])
         rc += 1
         i += 1
-        print(i,len(txt))
         if (i==len(txt)):
             break
     print("\nTransposition Matrix:")
