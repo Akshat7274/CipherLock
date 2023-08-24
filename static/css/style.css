@@ -68,7 +68,7 @@ img {
 
 /* width */
 ::-webkit-scrollbar {
-	width: 20px;
+	width: 12px;
 	background: transparent;
   }
   
@@ -677,11 +677,15 @@ table td:hover {
 	border: black solid 2px;
 }
 
-.cipher-name {
+.cipher-name{
 	border: none;
-	color:magenta;
 	/* background-color: rgba(0, 0, 0, 0.2); */
 	box-shadow: black 2px 2px 5px;
+}
+
+.cipher-name a{
+	color: magenta;
+	text-decoration: none;
 }
 
 .intro-section {
