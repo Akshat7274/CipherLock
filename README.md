@@ -1,6 +1,6 @@
 # Cryptography_WebApp
 
-## Check the application [here](https://cipherlock.onrender.com/) (May take some time to load: Deployed over a free instance)
+## Check the application [here](https://cipherlock.vercel.app/)
 
 This is a Web App that implements the following Cryptographic Algorithms
 
